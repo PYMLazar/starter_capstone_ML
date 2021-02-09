@@ -21,7 +21,7 @@ def setup_db(app, database_path=database_path):
 
     
 #----------------------------------------------------------------------------#
-# Models movies and actors
+# Models movies and actors TEST
 #----------------------------------------------------------------------------#
 
 
