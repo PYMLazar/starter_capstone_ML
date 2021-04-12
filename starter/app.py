@@ -8,7 +8,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS, cross_origin
 from models import setup_db, Movie, Actor
 from auth import AuthError, requires_auth, check_permissions, verify_decode_jwt
-from forms import MovieForm, ActorForm
 from authlib.integrations.flask_client import OAuth
 from six.moves.urllib.parse import urlencode
 from config import SECRET_KEY
@@ -86,10 +85,17 @@ def after_request(response):
 # The starting point of index/homepage of the app
 
 
+
 @app.route('/')
-@cross_origin()
 def index():
-    return render_template('pages/home.html')
+    return jsonify({
+        'GET /actors': 'List actors',
+        'GET /actors-detail': 'List actors with details',
+        'POST /actors': 'Create a actor profile',
+        'PATCH /actors/<id>': 'Update a actor',
+        'DELETE /actors/<id>': 'Delete a actor'
+    })
+
 
 #  Actors
 #  ----------------------------------------------------------------
