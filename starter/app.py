@@ -21,22 +21,13 @@ from os import environ
 # ALGORITHMS = ['RS256']
 # API_AUDIENCE = 'Casting'
 
-# AuthError Exception
-'''
-AuthError Exception
-A standardized way to communicate auth failure modes
-'''
-# class AuthError(Exception):
-#     def __init__(self, error, status_code):
-#         self.error = error
-#         self.status_code = status_code
 
-# AUTH0_CALLBACK_URL = os.getenv('AUTH0_CALLBACK_URL')
-# AUTH0_CLIENT_ID = os.getenv('AUTH0_CLIENT_ID')
-# AUTH0_CLIENT_SECRET = os.getenv('AUTH0_CLIENT_SECRET')
-# AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
-# AUTH0_BASE_URL = os.getenv('AUTH0_BASE_URL')
-# AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
+AUTH0_CALLBACK_URL = os.getenv('AUTH0_CALLBACK_URL')
+AUTH0_CLIENT_ID = os.getenv('AUTH0_CLIENT_ID')
+AUTH0_CLIENT_SECRET = os.getenv('AUTH0_CLIENT_SECRET')
+AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
+AUTH0_BASE_URL = os.getenv('AUTH0_BASE_URL')
+AUTH0_AUDIENCE = os.getenv('AUTH0_AUDIENCE')
 #----------------------------------------------------------------------------#
 # Initialize App
 #----------------------------------------------------------------------------#
@@ -55,7 +46,7 @@ def create_app(test_config=None):
 
 app = create_app()
 
-
+ 
 #----------------------------------------------------------------------------#
 # Controllers.
 #----------------------------------------------------------------------------#
@@ -329,60 +320,6 @@ def delete_movie(payload, movie_id):
         flash('An error occurred. This movie could not be deleted.')
     return jsonify(error)
 
-# #  Cast a Movie
-# #  ----------------------------------------------------------------
-# # route handler to get to form to cast a movie
-# @app.route('/cast/create', methods=['GET'])
-# #@requires_auth('get:castform')
-# #def create_cast_form(payload):
-# def create_cast_form():
-# 	movies = Movie.query.all()
-# 	actors = Actor.query.all()
-
-# 	return render_template('forms/new_cast.html', movies=movies, actors=actors)
-
-# # route handler to cast a movie in db
-# @app.route('/cast/create', methods=['POST'])
-# #@requires_auth('post:cast')
-# #def create_cast(payload):
-# def create_cast():
-# 	error = False
-# 	actor_id = request.form.get('actor_id')
-# 	movie_id = request.form.get('movie_id')
-
-# 	try:
-# 		actor = Actor.query.get(actor_id)
-# 		movie = Movie.query.get(movie_id)
-
-# 		if actor is None:
-# 			return json.dumps({
-# 			'success': False,
-# 			'error': 'Actor could not be found'
-# 			}), 404
-
-# 		if movie is None:
-# 			return json.dumps({
-# 			'success': False,
-# 			'error': 'Movie could not be found'
-# 			}), 404
-
-# 		movie.cast.append(actor)
-# 		movie.update()
-
-# 	except:
-# 		error = True
-
-# 	if error:
-# 		flash('Error: This actor was not cast. Please check your inputs and try again :)')
-
-# 	else:
-# 		# success message upon succeesful casting
-# 		flash('This actor was successfully booked!')
-
-# 	return render_template('pages/home.html')
-
-
-# Example error handling for unprocessable entity
 
 @app.errorhandler(422)
 def unprocessable(error):
