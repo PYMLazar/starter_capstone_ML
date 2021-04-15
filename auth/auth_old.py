@@ -8,6 +8,7 @@ from urllib.request import urlopen
 from os import environ
 
 
+#AUTH0_DOMAIN = os.getenv('AUTH0_DOMAIN')
 AUTH0_DOMAIN = 'fsnd-ml-casting-agency.eu.auth0.com'
 ALGORITHMS = ['RS256']
 API_AUDIENCE = 'Casting'
@@ -24,6 +25,31 @@ class AuthError(Exception):
 
 
 ## Auth Header
+
+'''
+@TODO implement get_token_auth_header() method
+    it should attempt to get the header from the request
+        it should raise an AuthError if no header is present
+    it should attempt to split bearer and the token
+        it should raise an AuthError if the header is malformed
+    return the token part of the header
+'''
+# def get_token_auth_header():
+# #     """Obtains the Access Token from the Authorization Header
+# #     """
+#     if "Authorization" in request.headers:
+#         auth_header = request.headers["Authorization"]
+#         if auth_header:
+#             bearer_token_array = auth_header.split(' ')
+#             if bearer_token_array[0] and bearer_token_array[0].lower() == "bearer" and bearer_token_array[1]:
+#                 return bearer_token_array[1]
+
+#     raise AuthError({
+#         'success': False,
+#         'message': 'JWT not found',
+#         'error': 401
+#     }, 401) 
+
 
 def get_token_auth_header():
         auth = request.headers.get('Authorization', None)
@@ -54,11 +80,19 @@ def get_token_auth_header():
             }, 401)
 
         token = parts[1]
-        print("token is:", token)
         return token
 
-
-
+'''
+@TODO implement check_permissions(permission, payload) method
+    @INPUTS
+        permission: string permission (i.e. 'post:drink')
+        payload: decoded jwt payload
+    it should raise an AuthError if permissions are not included in the payload
+        !!NOTE check your RBAC settings in
+         Auth0
+    it should raise an AuthError if the requested permission string is not in the payload permissions array
+    return true otherwise
+'''
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
         #raise AuthError('Permissions not included in JWT', 400)
@@ -75,14 +109,23 @@ def check_permissions(permission, payload):
 
     return True
 
-
+'''
+@TODO implement verify_decode_jwt(token) method
+    @INPUTS
+        token: a json web token (string)
+    it should be an Auth0 token with key id (kid)
+    it should verify the token using Auth0 /.well-known/jwks.json
+    it should decode the payload from the token
+    it should validate the claims
+    return the decoded payload
+    !!NOTE urlopen has a common certificate error described here: https://stackoverflow.com/questions/50236117/scraping-ssl-certificate-verify-failed-error-for-http-en-wikipedia-org
+'''
 def verify_decode_jwt(token):
     jsonurl = urlopen(f'https://{AUTH0_DOMAIN}/.well-known/jwks.json')
     jwks = json.loads(jsonurl.read())
     unverified_header = jwt.get_unverified_header(token)
-    print("unver_header", unverified_header)
     rsa_key = {}
-    # print("jwsks",jwks)
+    #print("jwsks",jwks)
     for key in jwks["keys"]:
         if key["kid"] == unverified_header["kid"]:
             rsa_key = {
@@ -102,7 +145,6 @@ def verify_decode_jwt(token):
                 audience=API_AUDIENCE,
                 issuer="https://"+AUTH0_DOMAIN+"/"
             )
-            print("payload",payload)
             return payload
 
         except jwt.ExpiredSignatureError:
@@ -116,27 +158,36 @@ def verify_decode_jwt(token):
     raise AuthError("invalid header: Unable to find right key", 401)
 
 
+
+'''
+@TODO implement @
+(permission) decorator method
+    @INPUTS
+    it should use the get_token_auth_header method to get the token
+    it should use the verify_decode_jwt method to decode the jwt
+    it should use the check_permissions method validate claims and check the requested permission
+    return the decorator which passes the decoded payload to the decorated method
+'''
+
 def requires_auth(permission=''):
     def requires_auth_decorator(f):
         #print(permission)
         @wraps(f)
         def wrapper(*args, **kwargs):
             try:
-                # print("test abort 0")
-				# print("token", token)
-                # token = None
-                # if session['token']:
-                #     token = session['token']
-                print("test requires_auth_abort 0.1")
-                # else:
-                token = get_token_auth_header()
-                print("test requires_auth_abort 0.2",  token)
-                # print('token at authorization time: {}'.format(token))
-                # if token is None:
-                #     print("test abort 0.3")
-                #     abort(400)
+                print("test_abort_0")
+                token = None
+                if session['token']:
+                    token = session['token']
+                    #print (test abort 0.1)
+                else:
+                    token = get_token_auth_header()
+                    #print (test abort 0.2)
+                print('token at authorization time: {}'.format(token))
+                if token is None:
+                    #print (test abort 0.3)
+                    abort(400)
                 payload = verify_decode_jwt(token)
-                #print("PAYLOAD_test abort 3")
                 print('Payload is: {}'.format(payload))
                 print(f'testing for permission: {permission}')
                 if check_permissions(permission, payload):
@@ -148,4 +199,21 @@ def requires_auth(permission=''):
 
 
         return wrapper
-    return requires_auth_decorator
+    return requires_auth_decorator  
+
+# def requires_auth(permission=''):
+#     def requires_auth_decorator(f):
+#         @wraps(f)
+#         def wrapper(*args, **kwargs):
+#             jwt = get_token_auth_header()
+#             try:
+#                 payload = verify_decode_jwt(jwt)
+#             except:
+#                 abort(401)
+
+#             check_permissions(permission, payload)    
+            
+#             return f(payload, *args, **kwargs)
+#         return wrapper
+#     return requires_auth_decorator    
+
