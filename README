@@ -20,7 +20,7 @@ The app provide a list of movies and actors and updating this data with specific
 Login access
 
 The app is deployed to Heroku and is working on the URL below:
-https://fsnd-capstone-cperacchio.herokuapp.com
+https://capstonecastingml.herokuapp.com/
 
 
 For use local: u will need a database, virtual environment, dependencies installation. 
