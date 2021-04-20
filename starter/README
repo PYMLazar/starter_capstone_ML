@@ -1,0 +1,149 @@
+Casting ACTOR & MOVIE App
+
+This is my last project for the Udacity FSND program. The app provides functionality about creating actors & movies projects.
+This is my final project for the Udacity Full Stack Web Developer Nanodegree. It's an app allowing a casting agency to cast actors for upcoming movie projects.
+
+Usage
+
+
+The casting agency main responsibilty is for creating movies and assigning actors to those movies. The goal is to store this information and limit the access based on roles through authentication
+
+Functionality
+
+The app provide a list of movies and actors and updating this data with specifics about the movie/actor
+
+-- Database with actors & movies
+-- Tracking information 
+-- Managing the roles of the app through authentication
+
+
+Login access
+
+The app is deployed to Heroku and is working on the URL below:
+https://fsnd-capstone-cperacchio.herokuapp.com
+
+
+For use local: u will need a database, virtual environment, dependencies installation. 
+An account with Auth0 for setting up the authentication
+
+
+This app runs on a PostgreSQL database. You can download PostgreSQL at postgresql.org.
+Create an account at Auth0.com 
+Next, create and activate a virtual environment:
+Install the dependencies for this project and set up environment variables:
+
+Database:
+Create a Postgress database locally.
+export DATABASE_URL='postgresql://your_user_name@localhost:XXXX/your_db_name'
+In Auth0, configure a single page web application and its API, relying on the environment variables in setup.sh.
+Start the development server:
+
+Casting app roles
+
+There are several roles provided for this app.
+
+Casting assistant: Can view upcoming movie projects (details) and listed actors (details)
+Casting assistant login credentials
+User: fyyur.casting.assistant@gmail.com
+Password: Auth0123!
+Executive producer: Full access
+Executive producer login credentials
+User: shanna.rhymes@gmail.com
+Password: Auth0123! 
+
+Endpoints
+
+To have access to this endpoints, an authenticated user is mandatory. Login with the credentials and a JWT token will be generated 
+
+Below u will find the endpoints and their response
+
+GET /login
+
+Redirects the user to the Auth0 login page, where the user can log in or sign up
+Roles authorized: all users
+Sample: curl http://127.0.0.1:5000/login
+GET /post-login
+
+Handles the response from the access token endpoint and stores the user's information in a Flask session
+Roles authorized: casting assistant, executive producer
+Sample: curl http://127.0.0.1:5000/post-login
+GET /logout
+
+Clears the user's session and logs them out
+Roles authorized: all users
+Sample: curl http://127.0.0.1:5000/logout
+
+
+
+GET /actors
+Returns all the actors in the database
+Roles: casting assistant, executive producer
+http://127.0.0.1:5000/actors
+
+GET /actors/create
+Creatin of a actor
+executive producer
+http://127.0.0.1:5000/actors/create
+
+
+GET /actors/{actor_id}
+Returns details of a actor listed in the database
+Roles: casting assistant, executive producer
+http://127.0.0.1:5000/actors/1
+
+GET /actors/{actor_id}/patch
+Update an actor profile
+Roles: executive producer
+http://127.0.0.1:5000/actors/1/patch
+
+GET /actors/{actor_id}/delete
+Removes a actor from the database
+Roles: executive producer
+http://127.0.0.1:5000/actors/1/delete
+
+
+
+GET /movies
+Returns all the movies in the database
+Roles: cast ing assistant, executive producer
+http://127.0.0.1:5000/movies
+
+
+GET /movies/{movie_id}
+Returns details of a movie project listed in the database
+Roles: casting assistant, executive producer
+http://127.0.0.1:5000/movies/1
+
+
+GET /movies/create
+Ability to create a movie project
+Roles: executive producer
+curl http://127.0.0.1:5000/movies/create
+
+GET /movies/{movie_id}
+Returns details of a actor listed in the database
+Roles: executive producer
+http://127.0.0.1:5000/movies/1 
+
+GET /movies/{movie_id}/patch
+Update a movie project
+Roles: executive producer
+http://127.0.0.1:5000/movies/1/patch
+
+GET /movies/{movie_id}/delete
+Removes a movie project from the database
+Roles: executive producer
+http://127.0.0.1:5000/movies/1/delete
+
+
+The error codes currently returned are:
+
+422: Unprocessable
+500: Internal server error
+404: Resource not found
+401: Unauthorized
+400: Bad request
+
+
+
+AuthError: Auth0 error status code and description
