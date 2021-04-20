@@ -44,12 +44,12 @@ There are several roles provided for this app.
 
 Casting assistant: Can view upcoming movie projects (details) and listed actors (details)
 Casting assistant login credentials
-User: fyyur.casting.assistant@gmail.com
-Password: Auth0123!
+User:
+Password: 
 Executive producer: Full access
 Executive producer login credentials
-User: shanna.rhymes@gmail.com
-Password: Auth0123! 
+User: 
+Password: 
 
 Endpoints
 
